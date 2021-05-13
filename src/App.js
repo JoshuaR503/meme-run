@@ -58,6 +58,26 @@ const questions = [
   }
 ];
 
+const memeTitles = [
+  "MEME GOD",
+  "MEME",
+  "DANK MEME",
+  "CERTIFIED MEMER",
+  "POPULAR MEME CHANNEL",
+  "SMALL MEME CHANNEL",
+  "REDDIT MEME MAKER",
+  "DISCORD MEME REPOSTER",
+  "AVERAGE MEME ENJOYER",
+  "AVERAGE MEME FAN",
+  "REDDIT MEME REPOSTER",
+  "INSTAGRAM MEME VIEWER",
+  "PERSON WHO ENJOYS MINION FACEBOOK MEMES",
+  'PERSON WHO PROUNOUNCES "MEME" as "ME-ME"',
+  "PERSON WHO HAS NEVER BEEN ON THE INTERNET"
+];
+
+const answerLetters = ["A", "B", "C", "D"];
+
 export default function App() {
   const [score, setScore] = useState(0);
 
@@ -84,17 +104,10 @@ export default function App() {
   }
 
   function calculateMemeTitle() {
-    let memeTitle = "not a memer";
+    let index = memeTitles.length;
     let percentage = questionsCorrect / questionsAnswered;
-    if (percentage === 1) {
-      memeTitle = "MEME GOD";
-    } else if (percentage < 1 && percentage >= 0.89) {
-      memeTitle = "REDDIT MEME MAKER";
-    } else if (percentage < 0.89 && percentage >= 0.79) {
-      memeTitle = "AVERGE MEME ENJOYER";
-    } else if (percentage < .79 && percentage >= .69) {
-      memeTitle = "AVERAGE MEME FAN";
-    } return memeTitle;
+
+    return memeTitles[index];
   }
 
   function handleAnswerClick(index) {
@@ -108,9 +121,9 @@ export default function App() {
 
     if (questionIndex < questions.length - 1) {
       setQuestionIndex(questionIndex + 1);
+      setCurrentQuestion(questions[questionIndex]);
     } else {
       setMemeTitle(calculateMemeTitle());
-      const elRef = document.getElementById("exampleModal");
 
       /// Element reference.
       const elRef = document.getElementById("exampleModal");
@@ -131,7 +144,6 @@ export default function App() {
       /// TODO: this looks horrible but it works.
       setTimeout(() => setShowConfetti(false), 5000);
     }
-    setCurrentQuestion(questions[questionIndex]);
   }
 
   return (
@@ -162,7 +174,7 @@ export default function App() {
             </div>
             <div class="modal-body">
               <h1>You are a {memeTitle}!</h1>
-              <h2>Score: {score}</h2>
+              <h1>Score: {score}</h1>
               <p>
                 You answered {questionsCorrect} of the {questionsAnswered} memes
                 correctly!
@@ -182,6 +194,10 @@ export default function App() {
         </div>
       </div>
 
+      {/* <Score score={score}/>
+
+      <br/> */}
+
       <Photo url={currentQuestion.photo} />
 
       <div className="row align-items-start">
@@ -192,13 +208,13 @@ export default function App() {
               <Answer
                 key={index}
                 answer={value}
-                handler={() => handleAnswerClick(index)}
+                answerLetter={answerLetters[index]}
+                handleClick={() => handleAnswerClick(index)}
               />
             </div>
           );
         })}
       </div>
-      <Score score={score} />
     </div>
   );
 }
