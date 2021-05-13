@@ -91,8 +91,10 @@ export default function App() {
     } else if (percentage < 1 && percentage >= 0.89) {
       memeTitle = "REDDIT MEME MAKER";
     } else if (percentage < 0.89 && percentage >= 0.79) {
-      memeTitle = "MEME VIEWER";
-    } else if (p) return memeTitle;
+      memeTitle = "AVERGE MEME ENJOYER";
+    } else if (percentage < .79 && percentage >= .69) {
+      memeTitle = "AVERAGE MEME FAN";
+    } return memeTitle;
   }
 
   function handleAnswerClick(index) {
@@ -108,6 +110,7 @@ export default function App() {
       setQuestionIndex(questionIndex + 1);
     } else {
       setMemeTitle(calculateMemeTitle());
+      const elRef = document.getElementById("exampleModal");
 
       /// Element reference.
       const elRef = document.getElementById("exampleModal");
