@@ -3,10 +3,7 @@ import React, { useState } from "react";
 import Photo from "./Photo";
 import Answer from "./Answer";
 import Score from "./Score";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import End from "./End";
-import { useHistory } from "react-router-dom";
-import { useWindowSize, useTimeout } from "react-use";
+import { useWindowSize } from "react-use";
 
 import Confetti from "react-confetti";
 
@@ -63,8 +60,6 @@ const questions = [
 ];
 
 export default function App() {
-  const history = useHistory();
-
   const [score, setScore] = useState(0);
 
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -85,7 +80,12 @@ export default function App() {
     height: "60%"
   };
 
-  const closeGame = () => {};
+  function resetGame() {
+    setScore(0);
+    setQuestionIndex(0);
+    setQuestionsCorrect(0);
+    setQuestionsAnswered(0);
+  }
 
   return (
     <div className="App container">
@@ -95,6 +95,7 @@ export default function App() {
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
+        onClick={() => resetGame()}
       >
         {showConfetti ? <Confetti width={width} height={height} /> : null}
 
@@ -109,25 +110,24 @@ export default function App() {
                 class="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                onClick={() => resetGame()}
               ></button>
             </div>
             <div class="modal-body">
               <h1>You are a {memeTitle}!</h1>
+              <h2>Score: {score}</h2>
               <p>
                 You answered {questionsCorrect} of the {questionsAnswered} memes
                 correctly!
               </p>
-              <h2>Score: {score}</h2>
             </div>
             <div class="modal-footer">
               <button
                 type="button"
-                class="btn btn-secondary"
+                class="btn btn-primary"
                 data-bs-dismiss="modal"
+                onClick={() => resetGame()}
               >
-                Close
-              </button>
-              <button type="button" class="btn btn-primary">
                 Play Again
               </button>
             </div>
@@ -175,16 +175,8 @@ export default function App() {
                     /// Show modal.
                     myModal.show(elRef);
 
-                    /// Set score back to 0 when user presses button to restart
-                    /// Set score back to 0.
-                    setScore(0);
-                    setQuestionsCorrect(0);
-                    setQuestionsAnswered(0);
-
                     /// Show confetti
                     setShowConfetti(true);
-
-                    setQuestionIndex(0);
 
                     /// turn of confetti after 5 seconds
                     /// TODO: this looks horrible but it works.
