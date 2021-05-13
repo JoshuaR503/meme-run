@@ -4,7 +4,6 @@ import Photo from "./Photo";
 import Answer from "./Answer";
 import Score from "./Score";
 import { useWindowSize } from "react-use";
-
 import Confetti from "react-confetti";
 
 const questions = [
@@ -74,17 +73,62 @@ export default function App() {
 
   const { width, height } = useWindowSize();
 
-  const [memeTitle, setMemeTitle] = useState("not a memer");
-
-  const mystyle = {
-    height: "60%"
-  };
+  const [memeTitle, setMemeTitle] = useState("Memetitle");
 
   function resetGame() {
     setScore(0);
     setQuestionIndex(0);
     setQuestionsCorrect(0);
     setQuestionsAnswered(0);
+    setCurrentQuestion(questions[questionIndex]);
+  }
+
+  function calculateMemeTitle() {
+    let memeTitle = "not a memer";
+    let percentage = questionsCorrect / questionsAnswered;
+    if (percentage === 1) {
+      memeTitle = "MEME GOD";
+    } else if (percentage < 1 && percentage >= 0.89) {
+      memeTitle = "REDDIT MEME MAKER";
+    } else if (percentage < 0.89 && percentage >= 0.79) {
+      memeTitle = "MEME VIEWER";
+    } else if (p) return memeTitle;
+  }
+
+  function handleAnswerClick(index) {
+    if (currentQuestion.answer === index) {
+      setScore(score + 100);
+      setQuestionsCorrect(questionsCorrect + 1);
+    } else {
+      setScore(score - 100);
+    }
+    setQuestionsAnswered(questionsAnswered + 1);
+
+    if (questionIndex < questions.length - 1) {
+      setQuestionIndex(questionIndex + 1);
+    } else {
+      setMemeTitle(calculateMemeTitle());
+
+      /// Element reference.
+      const elRef = document.getElementById("exampleModal");
+
+      /// Triger modal
+      /// Ignore error. We're referencing a library in index.html but the code editor thinks it's missing.
+      const myModal = new bootstrap.Modal(elRef, {
+        keyboard: false
+      });
+
+      /// Show modal.
+      myModal.show(elRef);
+
+      /// Show confetti
+      setShowConfetti(true);
+
+      /// turn of confetti after 5 seconds
+      /// TODO: this looks horrible but it works.
+      setTimeout(() => setShowConfetti(false), 5000);
+    }
+    setCurrentQuestion(questions[questionIndex]);
   }
 
   return (
@@ -145,45 +189,7 @@ export default function App() {
               <Answer
                 key={index}
                 answer={value}
-                handler={() => {
-                  /// TODO: when user is done, move to the end screen.
-                  // if (questionIndex === questions.length) {
-                  //   history.push('/end');
-                  // }
-
-                  if (currentQuestion.answer === index) {
-                    setScore(score + 100);
-                    setQuestionsCorrect(questionsCorrect + 1);
-                  } else {
-                    setScore(score - 100);
-                  }
-                  setQuestionsAnswered(questionsAnswered + 1);
-                  // Later on instead of cyclying through the same memes
-                  // We stop the game and move to the end screen
-                  if (questionIndex < questions.length - 1) {
-                    setQuestionIndex(questionIndex + 1);
-                  } else {
-                    /// Element reference.
-                    const elRef = document.getElementById("exampleModal");
-
-                    /// Triger modal
-                    /// Ignore error. We're referencing a library in index.html but the code editor thinks it's missing.
-                    const myModal = new bootstrap.Modal(elRef, {
-                      keyboard: false
-                    });
-
-                    /// Show modal.
-                    myModal.show(elRef);
-
-                    /// Show confetti
-                    setShowConfetti(true);
-
-                    /// turn of confetti after 5 seconds
-                    /// TODO: this looks horrible but it works.
-                    setTimeout(() => setShowConfetti(false), 5000);
-                  }
-                  setCurrentQuestion(questions[questionIndex]);
-                }}
+                handler={() => handleAnswerClick(index)}
               />
             </div>
           );
@@ -193,19 +199,3 @@ export default function App() {
     </div>
   );
 }
-
-// export default function App() {
-//   return (
-//     <BrowserRouter>
-//       <Switch>
-//         <Route path="/">
-//           <Game />
-//         </Route>
-
-//         <Route path="/end">
-//           <End />
-//         </Route>
-//       </Switch>
-//     </BrowserRouter>
-//   );
-//}
