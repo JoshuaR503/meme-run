@@ -2,3 +2,12 @@
   font-family: sans-serif;
   text-align: center;
 }
+
+body {
+  background-image: url("https://wallpapercave.com/wp/ueC7WNm.jpg");
+}
+
+h1,
+button {
+  font-family: Montserrat;
+}
