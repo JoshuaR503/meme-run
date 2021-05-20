@@ -47,30 +47,69 @@ const questions = [
   },
 
   {
-    photo: "assets/4.jpg",
-    answer: 0,
+    photo: "assets/5.png",
+    answer: 2,
     answers: [
       "Aaaaand Its Gone Meme",
       "They don't know that...",
-      "Change my mind",
+      "Stonks",
       "It has always been"
+    ]
+  },
+
+  {
+    photo: "assets/6.png",
+    answer: 3,
+    answers: ["Ours", "It has always been", "Change my mind", "I'm in danger"]
+  },
+  {
+    photo: "assets/7.jpg",
+    answer: 0,
+    answers: [
+      "Da fuq they doing ova der ",
+      "It has always been",
+      "Change my mind",
+      "I'm in danger"
+    ]
+  },
+  {
+    photo: "assets/8.jpg",
+    answer: 1,
+    answers: [
+      "Da fuq they doing ova der ",
+      "That's my secret",
+      "Change my mind",
+      "I'm in danger"
+    ]
+  },
+
+  {
+    photo: "assets/9.png",
+    answer: 2,
+    answers: [
+      "Da fuq they doing ova der ",
+      "That's my secret",
+      "nooo you can't just",
+      "I'm in danger"
     ]
   }
 ];
 
 const memeTitles = [
-  "MEME GOD",
+  "MEME GOD", // 100 - 90 %
   "MEME",
   "DANK MEME",
   "CERTIFIED MEMER",
   "POPULAR MEME CHANNEL",
-  "SMALL MEME CHANNEL",
+  "SMALL MEME CHANNEL", //80 - 70 %
   "REDDIT MEME MAKER",
   "DISCORD MEME REPOSTER",
   "AVERAGE MEME ENJOYER",
   "AVERAGE MEME FAN",
+  "REDDIT MEME SCROLLER", // 70 - 60 %
   "REDDIT MEME REPOSTER",
   "INSTAGRAM MEME VIEWER",
+  "TIK TOK MEME VIEWER", // 60 - 0 %
   "PERSON WHO ENJOYS MINION FACEBOOK MEMES",
   'PERSON WHO PROUNOUNCES "MEME" as "ME-ME"',
   "PERSON WHO HAS NEVER BEEN ON THE INTERNET"
@@ -84,6 +123,8 @@ export default function App() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [questionsCorrect, setQuestionsCorrect] = useState(0);
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
+  const [answerStreak, setAnswerStreak] = useState(0);
+  const [longestAnswerStreak, setLongestAnswerStreak] = useState(0);
 
   const [currentQuestion, setCurrentQuestion] = useState(
     questions[questionIndex]
@@ -100,6 +141,8 @@ export default function App() {
     setQuestionIndex(0);
     setQuestionsCorrect(0);
     setQuestionsAnswered(0);
+    setAnswerStreak(0);
+    setLongestAnswerStreak(0);
     setCurrentQuestion(questions[questionIndex]);
   }
 
@@ -107,17 +150,59 @@ export default function App() {
     let index = memeTitles.length;
     let percentage = questionsCorrect / questionsAnswered;
 
+    if (percentage === 1 || percentage >= 0.99) {
+      index = 0;
+    } else if (percentage < 0.99 && percentage >= 0.98) {
+      // 100 - 90 %
+      index = 1;
+    } else if (percentage < 0.98 && percentage >= 0.96) {
+      index = 2;
+    } else if (percentage < 0.96 && percentage >= 0.94) {
+      index = 3;
+    } else if (percentage < 0.94 && percentage >= 0.92) {
+      index = 4;
+    } else if (percentage < 0.92 && percentage >= 0.9) {
+      index = 5;
+    } else if (percentage < 0.9 && percentage >= 0.86) {
+      index = 6;
+    } else if (percentage < 0.86 && percentage >= 0.82) {
+      index = 7;
+    } else if (percentage < 0.82 && percentage >= 0.78) {
+      index = 8;
+    } else if (percentage < 0.78 && percentage >= 0.74) {
+      index = 9;
+    } else if (percentage < 0.74 && percentage >= 0.7) {
+      index = 10;
+    } else if (percentage < 0.8 && percentage >= 0.77) {
+      index = 11;
+    } else if (percentage < 0.77 && percentage >= 0.74) {
+      index = 12;
+    } else if (percentage < 0.74 && percentage >= 0.7) {
+      index = 13;
+    } else if (percentage < 0.7 && percentage >= 0.6) {
+      index = 14;
+    } else if (percentage < 0.6 && percentage >= 0.5) {
+      index = 15;
+    } else {
+      index = 16;
+    }
     return memeTitles[index];
   }
 
   function handleAnswerClick(index) {
     if (currentQuestion.answer === index) {
-      setScore(score + 100);
+      setAnswerStreak(answerStreak + 1);
+      setScore(score + 100 + answerStreak * 50);
       setQuestionsCorrect(questionsCorrect + 1);
     } else {
-      setScore(score - 100);
+      setScore(score - 50);
+      setAnswerStreak(0);
     }
     setQuestionsAnswered(questionsAnswered + 1);
+
+    if (answerStreak > longestAnswerStreak) {
+      setLongestAnswerStreak(answerStreak);
+    }
 
     if (questionIndex < questions.length - 1) {
       setQuestionIndex(questionIndex + 1);
@@ -174,11 +259,14 @@ export default function App() {
             </div>
             <div class="modal-body">
               <h1>You are a {memeTitle}!</h1>
+              <br />
               <h1>Score: {score}</h1>
+              <br />
               <p>
                 You answered {questionsCorrect} of the {questionsAnswered} memes
                 correctly!
               </p>
+              <p>Your longest answer streak was {longestAnswerStreak}!</p>
             </div>
             <div class="modal-footer">
               <button
